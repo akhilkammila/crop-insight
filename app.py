@@ -5,11 +5,15 @@ import pandas as pd
 import numpy as np
 from datetime import date
 
-import python_weather
 import asyncio
 import os
+import json
+
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 pipe = pickle.load(
     open('models/cropmodel.pkl', 'rb'))
@@ -20,10 +24,14 @@ def home():
     return 'hi'
 
 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     # https://www.ncei.noaa.gov/cag/global/time-series/globe/land_ocean/ytd/7/2012-2022
-    country = request.args.get('country')
+
+    # country = flask.request.json
+    # country = country['country']['label']
+
+    country = flask.request.country
 
     def run_model(year_subtraction: int, item: str):
         d = {'Area': [country], 'Item': [item], 'Year': [2022-year_subtraction], 'average_rain_fall_mm_per_year': [
@@ -39,7 +47,7 @@ def predict():
              'Plantains and others']
 
     total = 0.0
-    answ = []
+    answ = [[], [], []]
 
     for i in range(len(crops)):
         crop = crops[i]
@@ -48,16 +56,13 @@ def predict():
         last_5 = run_model(15, crop)
         last_30 = run_model(30, crop)
 
-        curr = []
-        curr.append((current-last_5)/last_5)
-        curr.append((current-last_30)/last_30)
+        answ[0].append((current-last_5)/last_5)
+        answ[1].append((current-last_30)/last_30)
 
         total += ((current-last_5)/last_5)
 
-        answ.append(curr)
-
-    for row in answ:
-        row.append((row[0]+total/10)*3)
+    for i in range(len(crops)):
+        answ[2].append((answ[0][i]+total/10)*3)
 
     # comparison to last 5 years for that crop worldwide (2013)
 
