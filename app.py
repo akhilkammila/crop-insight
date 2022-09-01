@@ -32,6 +32,10 @@ def predict():
     country = country['country']['label']
 
     # country = request.args.get('country')
+    # country = flask.request.json
+    # country = country['country']['label']
+
+    country = flask.request.country
 
     def run_model(year_subtraction: int, item: str):
         d = {'Area': [country], 'Item': [item], 'Year': [2013-year_subtraction], 'average_rain_fall_mm_per_year': [
