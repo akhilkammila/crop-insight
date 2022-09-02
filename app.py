@@ -35,7 +35,7 @@ def predict():
     # country = flask.request.json
     # country = country['country']['label']
 
-    country = flask.request.country
+    # country = flask.request.country
 
     def run_model(year_subtraction: int, item: str):
         d = {'Area': [country], 'Item': [item], 'Year': [2013-year_subtraction], 'average_rain_fall_mm_per_year': [
@@ -60,13 +60,13 @@ def predict():
         last_5 = run_model(10, crop)
         last_30 = run_model(30, crop)
 
-        answ[0].append((current-last_5)/last_5)
-        answ[1].append((current-last_30)/last_30)
+        answ[0].append(round((current-last_5)/last_5, 1))
+        answ[1].append(round((current-last_30)/last_30, 1))
 
-        total += ((current-last_5)/last_5)
+        total += (round((current-last_5)/last_5, 1))
 
     for i in range(len(crops)):
-        answ[2].append((answ[0][i]+total/10)*3)
+        answ[2].append(round((answ[0][i]+total/10)*3, 1))
 
     # comparison to last 5 years for that crop worldwide (2013)
 
