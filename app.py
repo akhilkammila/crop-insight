@@ -1,9 +1,9 @@
-from flask import Flask, request, render_template, jsonify
 import flask
 import pickle
 import pandas as pd
 import numpy as np
 from datetime import date
+from flask import Flask, request, render_template, jsonify
 
 import asyncio
 import os
@@ -37,7 +37,7 @@ def predict():
 
     # country = flask.request.country
 
-    def run_model(year_subtraction: int, item: str):
+    def run_model(year_subtraction, item):
         d = {'Area': [country], 'Item': [item], 'Year': [2013-year_subtraction], 'average_rain_fall_mm_per_year': [
             1000.0], 'pesticides_tonnes': [3000-year_subtraction*100], 'avg_temp': [20.54262658451951]}
 
