@@ -60,13 +60,13 @@ def predict():
         last_5 = run_model(10, crop)
         last_30 = run_model(30, crop)
 
-        answ[0].append(round((current-last_5)/last_5, 1))
-        answ[1].append(round((current-last_30)/last_30, 1))
+        answ[0].append(min(int((current-last_5)*100/last_5), 350))
+        answ[1].append(min(int((current-last_30)*100/last_30), 350))
 
-        total += (round((current-last_5)/last_5, 1))
+        total += (min(int((current-last_5)*100/last_5), 350))
 
     for i in range(len(crops)):
-        answ[2].append(round((answ[0][i]+total/10)*3, 1))
+        answ[2].append(min(int((answ[0][i]+total/10)*3), 350))
 
     # comparison to last 5 years for that crop worldwide (2013)
 
